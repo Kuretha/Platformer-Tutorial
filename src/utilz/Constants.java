@@ -4,6 +4,9 @@ import main.Game;
 
 public class Constants {
 
+	public static final float GRAVITY = 0.04f * Game.SCALE;
+	public static final int ANI_SPEED = 25;
+
 	public static class EnemyConstants {
 		public static final int CRABBY = 0;
 
@@ -41,6 +44,19 @@ public class Constants {
 			return 0;
 		}
 
+		public static int GetMaxHealth(int enemy_type) {
+			return switch (enemy_type) {
+				case CRABBY -> 10;
+				default -> 1;
+			};
+		}
+
+		public static int GetEnemyDmg(int enemy_type) {
+			return switch (enemy_type) {
+				case CRABBY -> 15;
+				default -> 0;
+			};
+		}
 	}
 
 	public static class Environment{

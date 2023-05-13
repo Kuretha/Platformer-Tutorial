@@ -6,7 +6,7 @@ import java.awt.*;
 import java.awt.geom.Rectangle2D;
 
 import static utilz.Constants.ANI_SPEED;
-import static utilz.Constants.EnemyConstants.*;
+import static utilz.Constants.ObjectConstants.*;
 
 public class GameObject {
 	protected int x, y, objType;
@@ -28,6 +28,10 @@ public class GameObject {
 			aniIndex++;
 			if (aniIndex >= GetSpriteAmount(objType)) {
 				aniIndex = 0;
+				if (objType == BARREL ||  objType == BOX) {
+					doAnimation = false;
+					active = false;
+				}
 			}
 		}
 	}
@@ -37,7 +41,10 @@ public class GameObject {
 		aniTick = 0;
 		active = true;
 
-		doAnimation = true;
+		if (objType == BARREL ||  objType == BOX)
+			doAnimation = false;
+		else
+			doAnimation = true;
 	}
 
 	protected void initHitbox(int width, int height) {
@@ -49,8 +56,6 @@ public class GameObject {
 		g.setColor(Color.PINK);
 		g.drawRect((int)hitbox.x - xLvlOffset, (int)hitbox.y, (int)hitbox.width, (int)hitbox.height);
 	}
-
-	`
 
 	public int getObjType() {
 		return objType;
@@ -66,6 +71,10 @@ public class GameObject {
 
 	public void setActive(boolean active) {
 		this.active = active;
+	}
+
+	public void setAnimation(boolean doAnimation) {
+		this.doAnimation = doAnimation;
 	}
 
 	public int getxDrawOffset() {

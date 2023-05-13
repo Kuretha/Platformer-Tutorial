@@ -5,6 +5,7 @@ import entities.EnemyManager;
 import entities.Player;
 import levels.LevelManager;
 import main.Game;
+import objects.ObjectManagaer;
 import ui.GameOverOverlay;
 import ui.LevelCompletedOverlay;
 import ui.PauseOverlay;
@@ -24,6 +25,7 @@ public class Playing extends State implements Statemethods{
 	private Player player;
 	private LevelManager levelManager;
 	private EnemyManager enemyManager;
+	private ObjectManagaer objectManagaer;
 	private PauseOverlay pauseOverlay;
 	private LevelCompletedOverlay levelCompletedOverlay;
 	private GameOverOverlay gameOverOverlay;
@@ -64,6 +66,7 @@ public class Playing extends State implements Statemethods{
 
 	private void loadStartLevel() {
 		enemyManager.loadEnemies(levelManager.getCurrentLevel());
+		objectManagaer.loadObjects(levelManager.getCurrentLevel());
 	}
 
 	private void calcLvlOffset() {
@@ -73,6 +76,7 @@ public class Playing extends State implements Statemethods{
 	private void initClasses() {
 		levelManager = new LevelManager(game);
 		enemyManager = new EnemyManager(this);
+		objectManagaer = new ObjectManagaer(this);
 
 		player = new Player(200, 200, (int)(64 * Game.SCALE), (int)(40 * Game.SCALE), this);
 		player.loadlvlData(levelManager.getCurrentLevel().getLvlData());
@@ -91,6 +95,7 @@ public class Playing extends State implements Statemethods{
 			levelCompletedOverlay.update();
 		}else if (!gameOver){
 			levelManager.update();
+			objectManagaer.update();
 			player.update();
 			enemyManager.update(levelManager.getCurrentLevel().getLvlData(), player);
 			checkCloseToBorder();
@@ -120,6 +125,7 @@ public class Playing extends State implements Statemethods{
 		levelManager.draw(g, xLvlOffset);
 		player.render(g, xLvlOffset);
 		enemyManager.draw(g, xLvlOffset);
+		objectManagaer.draw(g, xLvlOffset);
 
 		if (paused) {
 			g.setColor(new Color(0, 0,0,180));
@@ -147,14 +153,23 @@ public class Playing extends State implements Statemethods{
 		lvlCompleted = false;
 		player.resetAll();
 		enemyManager.resetAllEnemies();
+		objectManagaer.resetAllObjects();
 	}
 
 	public void setGameOver(boolean gameOver) {
 		this.gameOver = gameOver;
 	}
 
+	public void checkObjectHit(Rectangle2D.Float attackBox) {
+		objectManagaer.checkObjectHit(attackBox);
+	}
+
 	public void checkEnemyhit(Rectangle2D.Float attackBox) {
 		enemyManager.checkEnemyHit(attackBox);
+	}
+
+	public void checkPotionTouched(Rectangle2D.Float hitbox) {
+		objectManagaer.checkObjectTouched(hitbox);
 	}
 
 	@Override
@@ -247,4 +262,6 @@ public class Playing extends State implements Statemethods{
 	public EnemyManager getEnemyManager() {
 		return enemyManager;
 	}
+
+	public ObjectManagaer getObjectManagaer() {return objectManagaer;}
 }

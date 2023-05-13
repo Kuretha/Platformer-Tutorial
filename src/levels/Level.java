@@ -5,6 +5,7 @@ import entities.Player;
 import main.Game;
 import objects.GameContainer;
 import objects.Potion;
+import objects.Spike;
 import utilz.HelpMethods;
 
 import java.awt.Point;
@@ -21,6 +22,7 @@ public class Level {
 	private int[][] lvlData;
 	private ArrayList<Crabby> crabs;
 	private ArrayList<Potion> potions;
+	private ArrayList<Spike> spikes;
 	private ArrayList<GameContainer> containers;
 	private int lvlTilesWide;
 	private int maxTilesOffset;
@@ -33,8 +35,13 @@ public class Level {
 		createEnemies();
 		createPotions();
 		createContainers();
+		createSpikes();
 		calclvlOffsets();
 		calcPlayerSpawn();
+	}
+
+	private void createSpikes() {
+		spikes = HelpMethods.GetSpikes(img);
 	}
 
 	private void createContainers() {
@@ -89,5 +96,9 @@ public class Level {
 
 	public ArrayList<GameContainer> getContainers() {
 		return containers;
+	}
+
+	public ArrayList<Spike> getSpikes() {
+		return spikes;
 	}
 }

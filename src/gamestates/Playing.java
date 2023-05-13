@@ -172,6 +172,11 @@ public class Playing extends State implements Statemethods{
 		objectManagaer.checkObjectTouched(hitbox);
 	}
 
+	public void checkSpikesTouched(Player p) {
+		objectManagaer.checkSpikesTouched(p);
+	}
+
+
 	@Override
 	public void mouseClicked(MouseEvent e) {
 		if (!gameOver)
@@ -264,4 +269,9 @@ public class Playing extends State implements Statemethods{
 	}
 
 	public ObjectManagaer getObjectManagaer() {return objectManagaer;}
+
+	public LevelManager getLevelManager() {
+		return levelManager;
+	}
+
 }

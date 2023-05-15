@@ -1,19 +1,12 @@
 package utilz;
 
-import entities.Crabby;
-import main.Game;
-
 import javax.imageio.ImageIO;
-import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.util.ArrayList;
-
-import static utilz.Constants.EnemyConstants.CRABBY;
 
 public class LoadSave {
 
@@ -36,6 +29,9 @@ public class LoadSave {
 	public static final String CONTAINER_ATLAS = "objects_sprites.png";
 	public static final String TRAP_ATLAS = "trap_atlas.png";
 	public static final String CANNON_ATLAS = "cannon_atlas.png";
+	public static final String CANNON_BALL = "ball.png";
+	public static final String DEATH_SCREEN = "death_screen.png";
+	public static final String OPTIONS_MENU = "options_background.png";
 
 	public static BufferedImage GetSpriteAtlas(String fileName){
 		BufferedImage img = null;

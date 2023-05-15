@@ -43,6 +43,7 @@ public class Player extends Entity{
 //	private int currentHealth = maxHealth;
 	private int healthWidth = healthBarWidth;
 
+	private int tileY = 0;
 
 	private  int flipX = 0;
 	private  int flipW = 1;
@@ -77,7 +78,16 @@ public class Player extends Entity{
 		updateHealthBar();
 
 		if (currentHealth <= 0) {
-			playing.setGameOver(true);
+			if (state != DEAD) {
+				state = DEAD;
+				aniTick = 0;
+				aniIndex = 0;
+				playing.setPlayerDying(true);
+			}else if (aniIndex == GetSpriteAmount(DEAD) - 1 && aniTick >= ANI_SPEED - 1) {
+				playing.setGameOver(true);
+			}else
+				updateAnimationTick();
+
 			return;
 		}
 
@@ -87,6 +97,7 @@ public class Player extends Entity{
 		if (moving) {
 			checkPotionTouched();
 			checkSpikesTouched();
+			tileY = (int)(hitbox.y / Game.TILES_SIZE);
 		}
 		if (attacking)
 			checkAttack();
@@ -331,5 +342,8 @@ public class Player extends Entity{
 		if (!IsEntityOnFloor(hitbox, lvlData))
 			inAir = true;
 
+	}
+	public int getTileY() {
+		return tileY;
 	}
 }

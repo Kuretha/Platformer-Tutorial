@@ -10,6 +10,7 @@ import java.awt.Color;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 
+import audio.AudioPlayer;
 import gamestates.Playing;
 import main.Game;
 import utilz.LoadSave;
@@ -38,10 +39,15 @@ public class Player extends Entity{
 	private int healthBarHeight = (int)(4 * Game.SCALE);
 	private int healthBarXStart = (int)(34 * Game.SCALE);
 	private int healthBarYStart = (int)(14 * Game.SCALE);
-
-//	private int maxHealth = 100;
-//	private int currentHealth = maxHealth;
 	private int healthWidth = healthBarWidth;
+
+	private int powerBarWidth = (int)(104 * Game.SCALE);
+	private int powerBarHeigth = (int)(34 * Game.SCALE);
+	private int powerBarXStart = (int)(44 * Game.SCALE);
+	private int powerBarYStart = (int)(34 * Game.SCALE);
+	private int powerWidth = powerBarWidth;
+	private int powerMaxValue = 200;
+	private int powerValue = powerMaxValue;
 
 	private int tileY = 0;
 
@@ -50,6 +56,10 @@ public class Player extends Entity{
 
 	private boolean attackChecked;
 	private Playing playing;
+	private boolean powerAttackActive;
+	private int powerAttackTick;
+	private int powerGrowSpeed = 15;
+	private int powerGrowTick;
 
 	public  Player(float x, float y, int width, int height, Playing playing){
 		super(x, y, width, height);
@@ -76,6 +86,7 @@ public class Player extends Entity{
 
 	public void update(){
 		updateHealthBar();
+		updatePowerBar();
 
 		if (currentHealth <= 0) {
 			if (state != DEAD) {
@@ -83,8 +94,11 @@ public class Player extends Entity{
 				aniTick = 0;
 				aniIndex = 0;
 				playing.setPlayerDying(true);
+				playing.getGame().getAudioPlayer().playEffect(AudioPlayer.DIE);
 			}else if (aniIndex == GetSpriteAmount(DEAD) - 1 && aniTick >= ANI_SPEED - 1) {
 				playing.setGameOver(true);
+				playing.getGame().getAudioPlayer().stopSong();
+				playing.getGame().getAudioPlayer().playEffect(AudioPlayer.GAMEOVER);
 			}else
 				updateAnimationTick();
 
@@ -120,6 +134,7 @@ public class Player extends Entity{
 		attackChecked = true;
 		playing.checkEnemyhit(attackBox);
 		playing.checkObjectHit(attackBox);
+		playing.getGame().getAudioPlayer().playAttackSound();
 	}
 
 	private void updateAttackBox() {
@@ -132,7 +147,17 @@ public class Player extends Entity{
 	}
 
 	private void updateHealthBar() {
-		healthWidth = (int)((currentHealth / (float)(maxHealth)) * healthBarWidth);
+		healthWidth = (int)((currentHealth / (float) maxHealth) * healthBarWidth);
+	}
+
+	private void updatePowerBar() {
+		powerWidth = (int)((powerValue / (float) powerMaxValue) * powerBarWidth);
+
+		powerGrowTick++;
+		if (powerGrowTick >= powerGrowSpeed) {
+			powerGrowTick = 0;
+			changePower(1);
+		}
 	}
 
 	public void render(Graphics g, int lvlOffset){
@@ -245,6 +270,7 @@ public class Player extends Entity{
 	private void jump() {
 		if (inAir)
 			return;
+		playing.getGame().getAudioPlayer().playEffect(AudioPlayer.JUMP);
 		inAir = true;
 		airSpeed = jumpSpeed;
 	}
@@ -270,7 +296,11 @@ public class Player extends Entity{
 
 
 	public void changePower(int value) {
-		System.out.println("Added Power");
+		powerValue += value;
+		if (powerValue >= powerMaxValue)
+			powerValue = powerMaxValue;
+		else if (powerValue <= 0)
+			powerValue = 0;
 	}
 
 	private void updateXPos(float xSpeed) {

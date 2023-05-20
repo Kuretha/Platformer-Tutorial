@@ -9,6 +9,8 @@ import java.awt.geom.Rectangle2D;
 
 public abstract class Entity {
 
+	// These are variables for our entity inside our game
+
 	protected float x,y;
 	protected int width, height;
 	protected Rectangle2D.Float hitbox;
@@ -29,12 +31,13 @@ public abstract class Entity {
 		this.height = height;
 	}
 
+	//These method is used for debugging attack box for our entity
 	protected void drawAttackBox(Graphics g, int lvlOffsetX) {
 		g.setColor(Color.red);
 		g.drawRect((int) attackBox.x - lvlOffsetX, (int)attackBox.y, (int)attackBox.width, (int)attackBox.height);
 	}
 
-
+	//These method is used for debugging hit box for our entity
 	protected void drawHitbox(Graphics g, int xLvlOffset) {
 		// forDebugging the hitbox
 		g.setColor(Color.PINK);
